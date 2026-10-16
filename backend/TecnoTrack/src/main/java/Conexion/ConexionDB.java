@@ -20,9 +20,9 @@ public class ConexionDB {
     public static Connection con = null;
     
     public static Connection MysConnection() throws SQLException{
-        url = "jdbc:mysql://localhost:3306/crediya_db";
+        url = "jdbc:mysql://localhost:3306/TecnoTrack";
         user = "root";
-        password = "@lixteamo10102019";  
+        password = "jessi34_";  
         return getConnection(url, user, password);
     }
      private static Connection getConnection(String url, String user,String password){
