@@ -1,0 +1,331 @@
+/* --- Variables y Paleta de Colores --- */
+:root {
+    --bg-marfil: #F9F8F6;
+    --bg-card: #FFFFFF;
+    --primary-lavanda: #D4D4F7;
+    --primary-lavanda-hover: #BEBEEF;
+    --accent-melocoton: #FFCBA4;
+    --accent-menta: #88E0BE;
+    --accent-menta-bg: #E3F8F1;
+    --accent-malva: #C895FF;
+    --text-dark: #2C2A29;
+    --text-muted: #6B6765;
+    --border-color: #E2DFDB;
+    --shadow: 0 4px 12px rgba(44, 42, 41, 0.05);
+    --radius: 12px;
+}
+
+/* --- Reseteo Global --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-marfil);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* --- Encabezado --- */
+.header {
+    background-color: var(--primary-lavanda);
+    padding: 1.5rem 2rem;
+    text-align: center;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.logo-icon {
+    font-size: 1.8rem;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.tagline {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+}
+
+/* --- Navegación --- */
+.navbar {
+    background-color: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow);
+}
+
+.navbar ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+.navbar li a {
+    display: block;
+    padding: 1rem 1.25rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, color 0.2s;
+    border-bottom: 3px solid transparent;
+}
+
+.navbar li a:hover,
+.navbar li a.active {
+    background-color: var(--bg-marfil);
+    color: var(--text-dark);
+    border-bottom-color: var(--accent-malva);
+}
+
+/* --- Contenedor Principal --- */
+.main-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+/* --- Secciones y Tarjetas --- */
+.section {
+    background-color: var(--bg-card);
+    padding: 2rem;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-color);
+}
+
+.section h2 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    border-left: 4px solid var(--accent-malva);
+    padding-left: 0.75rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    margin-bottom: 0;
+}
+
+/* Resumen Dashboard */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+}
+
+.summary-card {
+    background: linear-gradient(135deg, var(--bg-marfil), var(--bg-card));
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.summary-card h3 {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
+
+.card-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* --- Tablas --- */
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+th, td {
+    padding: 0.85rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background-color: var(--bg-marfil);
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+tr:hover {
+    background-color: rgba(230, 230, 250, 0.15);
+}
+
+.text-center {
+    text-align: center;
+    color: var(--text-muted);
+}
+
+/* --- Etiquetas Visuales de Estado --- */
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-disponible {
+    background-color: var(--accent-menta-bg);
+    color: #0F5132;
+}
+
+.badge-prestado {
+    background-color: #FFE6E6;
+    color: #842029;
+}
+
+/* --- Formularios --- */
+.form-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: var(--bg-marfil);
+    color: var(--text-dark);
+    transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-malva);
+    background-color: var(--bg-card);
+}
+
+.form-actions {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+/* --- Botones --- */
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--accent-malva);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #B275EE;
+}
+
+.btn-secondary {
+    background-color: var(--primary-lavanda);
+    color: var(--text-dark);
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-lavanda-hover);
+}
+
+/* --- Alertas Dinámicas --- */
+.alert {
+    margin-top: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.alert.success {
+    background-color: var(--accent-menta-bg);
+    color: #0F5132;
+    border: 1px solid var(--accent-menta);
+}
+
+.alert.error {
+    background-color: #F8D7DA;
+    color: #842029;
+    border: 1px solid #F5C2C7;
+}
+
+.hidden {
+    display: none;
+}
+
+/* --- Recomendaciones --- */
+.recommendations-box {
+    background-color: var(--bg-marfil);
+    padding: 1.25rem;
+    border-radius: 8px;
+    border: 1px dashed var(--accent-malva);
+}
+
+/* --- Pie de página --- */
+.footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}

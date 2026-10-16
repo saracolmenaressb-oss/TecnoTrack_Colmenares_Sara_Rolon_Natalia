@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Hoja de estilos -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/datos.js"></script>
+    <script src="js/inventario.js"></script>
+    <script src="js/prestamos.js"></script>
+    <script src="js/app.js"></script>
+    <title>TecnoTrack</title>
+</head>
+<body>
+    <!-- Encabezado -->
+    <header class="header">
+        <div class="logo-container">
+            <span class="logo-icon">💻</span>
+            <h1>TecnoTrack</h1>
+        </div>
+        <p class="tagline">Gestión Inteligente de Equipos</p>
+    </header>
+
+    <!-- Menú de Navegación -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="#dashboard" class="active">Panel</a></li>
+            <li><a href="#inventario">Inventario</a></li>
+            <li><a href="#prestamos">Préstamos</a></li>
+            <li><a href="#historial">Historial</a></li>
+            <li><a href="#recomendaciones">Recomendaciones IA</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <main class="main-container">
+
+        <!-- Panel de Resumen -->
+        <section id="dashboard" class="section">
+            <h2>Panel de Resumen</h2>
+            <div class="cards-grid">
+                <div class="card summary-card">
+                    <h3>Equipos Totales</h3>
+                    <p class="card-number" id="total-equipos">--</p>
+                </div>
+                <div class="card summary-card">
+                    <h3>En Préstamo</h3>
+                    <p class="card-number" id="equipos-prestados">--</p>
+                </div>
+                <div class="card summary-card">
+                    <h3>Disponibles</h3>
+                    <p class="card-number" id="equipos-disponibles">--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Inventario de Equipos -->
+        <section id="inventario" class="section">
+            <h2>Inventario de equipos</h2>
+            <p>Consulta los equipos y su disponibilidad actual.</p>
+
+            <!-- Resumen general -->
+            <div class="resumen-inventario">
+                <p>Total: <strong id="totalEquipos">0</strong></p>
+                <p>Disponibles: <strong id="totalDisponibles">0</strong></p>
+                <p>Prestados: <strong id="totalPrestados">0</strong></p>
+                <p>Dañados: <strong id="totalDanados">0</strong></p>
+            </div>
+
+            <!-- Búsqueda y filtros -->
+            <div class="filtros-inventario">
+                <label for="buscarEquipo">Buscar por código</label>
+                <input
+                    type="search"
+                    id="buscarEquipo"
+                    placeholder="Ej. PC-APO-001"
+                >
+
+                <label for="filtroTipo">Tipo de equipo</label>
+                <select id="filtroTipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="Computador">Computador</option>
+                    <option value="Monitor">Monitor</option>
+                    <option value="Teclado">Teclado</option>
+                    <option value="Mouse">Mouse</option>
+                </select>
+
+                <label for="filtroUbicacion">Ubicación</label>
+                <select id="filtroUbicacion">
+                    <option value="">Todas las ubicaciones</option>
+                    <option value="Apolo">Apolo</option>
+                    <option value="Sputnik">Sputnik</option>
+                    <option value="Artemis">Artemis</option>
+                    <option value="Houston">Houston</option>
+                    <option value="Corredor">Corredor</option>
+                </select>
+
+                <label for="filtroEstado">Estado</label>
+                <select id="filtroEstado">
+                    <option value="">Todos los estados</option>
+                    <option value="DISPONIBLE">Disponible</option>
+                    <option value="PRESTADO">Prestado</option>
+                    <option value="DAÑADO">Dañado</option>
+                    <option value="INHABILITADO">Inhabilitado</option>
+                </select>
+
+                <button type="button" id="limpiarFiltros">
+                    Limpiar filtros
+                </button>
+            </div>
+
+            <!-- Resultados -->
+            <p id="cantidadResultados" aria-live="polite"></p>
+
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Tipo</th>
+                            <th>Marca</th>
+                            <th>Ubicación</th>
+                            <th>Estado</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="cuerpoInventario">
+                        <!-- JavaScript agregará las filas -->
+                    </tbody>
+                </table>
+            </div>
+
+            <p id="mensajeSinResultados" hidden>
+                No encontramos equipos con esos criterios.
+            </p>
+
+            <p id="mensajeInventario" role="status" aria-live="polite"></p>
+        </section>
+
+        <!-- Formulario para Registrar Préstamos -->
+        <section id="prestamos" class="section">
+            <h2>Registrar Préstamo o Devolución</h2>
+            <div class="form-container">
+                <form id="form-prestamo">
+                    <div class="form-group">
+                        <label for="codigo-equipo">Código o ID del Equipo:</label>
+                        <input type="text" id="codigo-equipo" required placeholder="Ej. EQ-001">
+                    </div>
+                    <div class="form-group">
+                        <label for="documento-usuario">Documento del Usuario:</label>
+                        <input type="text" id="documento-usuario" required placeholder="Ej. 1098...ీల">
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo-operacion">Tipo de Movimiento:</label>
+                        <select id="tipo-operacion" required>
+                            <option value="PRESTAMO">Préstamo</option>
+                            <option value="DEVOLUCION">Devolución</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Registrar Operación</button>
+                    </div>
+                </form>
+                <!-- Contenedor para mensajes de éxito/error -->
+                <div id="mensaje-alerta" class="alert hidden"></div>
+            </div>
+        </section>
+
+        <!-- Historial de Movimientos -->
+        <section id="historial" class="section">
+            <h2>Historial de Movimientos</h2>
+            <div class="table-responsive">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Equipo</th>
+                            <th>Usuario</th>
+                            <th>Movimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-historial-body">
+                        <tr>
+                            <td colspan="4" class="text-center">Sin movimientos registrados aún.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Área de Recomendaciones -->
+        <section id="recomendaciones" class="section">
+            <h2>Recomendaciones del Sistema</h2>
+            <div class="recommendations-box" id="recomendaciones-content">
+                <p class="text-muted">Conecta los endpoints del backend para ver sugerencias inteligentes y análisis de rotación de equipos.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+        <p>TecnoTrack &copy; 2026 — Desarrollado para Demostración</p>
+    </footer>
+</body>
+</html>
