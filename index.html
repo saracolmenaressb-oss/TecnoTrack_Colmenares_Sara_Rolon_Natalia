@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abrir TecnoTrack</title>
+    <script>
+        // Conserva los enlaces anteriores sin duplicar la aplicación de fronted/.
+        const destinoTecnoTrack = new URL("fronted/index.html", window.location.href);
+        destinoTecnoTrack.search = window.location.search;
+        destinoTecnoTrack.hash = window.location.hash;
+        window.location.replace(destinoTecnoTrack.href);
+    </script>
+</head>
+<body>
+    <p><a href="fronted/index.html">Abrir TecnoTrack</a></p>
+</body>
+</html>

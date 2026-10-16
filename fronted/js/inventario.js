@@ -38,6 +38,18 @@ const cantidadResultadosInventario =
 const mensajeInventario =
     document.getElementById("mensajeInventario");
 
+// La capa de integración entrega la instantánea; nunca se modifica datos.js.
+let equiposInventario = [];
+let paginaInventario = 1;
+const equiposPorPaginaInventario = 8;
+let inventarioBloqueado = true;
+let inventarioInicializado = false;
+let crearIconoTipoInventario = null;
+
+/** Normaliza los valores de búsqueda sin cambiar los datos originales.
+ * @param {*} valor Texto del formulario o dato recibido.
+ * @returns {string} Texto sin espacios externos y en minúsculas.
+ */
 function normalizarTextoInventario(valor) {
     return String(valor ?? "").trim().toLocaleLowerCase();
 }
@@ -52,7 +64,9 @@ function obtenerTextoEstado(estado) {
     return estados[estado] ?? "Estado desconocido";
 }
 /**
- * Comprueba si un equipo puede solicitarse en préstamo.
+ * Comprueba si un equipo puede solicitarse en préstamo en la instantánea local.
+ * @param {Object} equipo Equipo obtenido de la capa API.
+ * @returns {boolean} Elegibilidad visual; el backend valida la operación real.
  */
 function equipoPuedePrestarse(equipo) {
     return equipo.estado === "DISPONIBLE"
@@ -64,17 +78,17 @@ function equipoPuedePrestarse(equipo) {
 // ==========================================
 
 function actualizarResumenInventario() {
-    const total = equipos.length;
+    const total = equiposInventario.length;
 
-    const disponibles = equipos.filter(
+    const disponibles = equiposInventario.filter(
         equipo => equipo.estado === "DISPONIBLE"
     ).length;
 
-    const prestados = equipos.filter(
+    const prestados = equiposInventario.filter(
         equipo => equipo.estado === "PRESTADO"
     ).length;
 
-    const danados = equipos.filter(
+    const danados = equiposInventario.filter(
         equipo => equipo.estado === "DAÑADO"
     ).length;
 
@@ -87,6 +101,10 @@ function actualizarResumenInventario() {
 // 4. MOSTRAR EQUIPOS EN LA TABLA
 // ==========================================
 
+/** Renderiza una página de los equipos filtrados y sus acciones.
+ * @param {Array<Object>} listaEquipos Equipos que cumplen los filtros existentes.
+ * @returns {void}
+ */
 function mostrarEquipos(listaEquipos) {
     // Elimina las filas anteriores para evitar duplicados.
     cuerpoTablaInventario.replaceChildren();
@@ -99,8 +117,17 @@ function mostrarEquipos(listaEquipos) {
     mensajeSinResultadosInventario.hidden =
         listaEquipos.length !== 0;
 
-    // Construye una fila por cada equipo.
-    listaEquipos.forEach(equipo => {
+    const totalPaginas = Math.max(1, Math.ceil(listaEquipos.length / equiposPorPaginaInventario));
+    paginaInventario = Math.min(paginaInventario, totalPaginas);
+    const inicio = (paginaInventario - 1) * equiposPorPaginaInventario;
+    document.getElementById("pagina-inventario").textContent = listaEquipos.length
+        ? `${inicio + 1}–${Math.min(inicio + equiposPorPaginaInventario, listaEquipos.length)} de ${listaEquipos.length} equipos · Página ${paginaInventario} de ${totalPaginas}`
+        : "Sin resultados";
+    document.getElementById("pagina-anterior").disabled = paginaInventario <= 1;
+    document.getElementById("pagina-siguiente").disabled = paginaInventario >= totalPaginas;
+
+    // Conserva el renderizado del inventario y añade paginación y SVG de la integración.
+    listaEquipos.slice(inicio, inicio + equiposPorPaginaInventario).forEach(equipo => {
         const fila = document.createElement("tr");
 
         // Código
@@ -109,7 +136,13 @@ function mostrarEquipos(listaEquipos) {
 
         // Tipo
         const celdaTipo = document.createElement("td");
-        celdaTipo.textContent = equipo.tipo;
+        const tipoPresentado = document.createElement("span");
+        tipoPresentado.className = "tipo-equipo";
+        if (crearIconoTipoInventario) tipoPresentado.append(crearIconoTipoInventario(equipo.tipo));
+        const nombreTipo = document.createElement("span");
+        nombreTipo.textContent = equipo.tipo;
+        tipoPresentado.append(nombreTipo);
+        celdaTipo.append(tipoPresentado);
 
         // Marca
         const celdaMarca = document.createElement("td");
@@ -154,6 +187,8 @@ function mostrarEquipos(listaEquipos) {
             botonPrestar.type = "button";
             botonPrestar.textContent = "Solicitar préstamo";
             botonPrestar.classList.add("boton-prestar");
+            botonPrestar.classList.add("btn", "btn-primary");
+            botonPrestar.disabled = inventarioBloqueado;
 
             botonPrestar.addEventListener("click", () => {
                 // Se comunica con el módulo de préstamos.
@@ -179,6 +214,17 @@ function mostrarEquipos(listaEquipos) {
             }
 
             celdaAccion.appendChild(textoAccion);
+            const botonAlternativas = document.createElement("button");
+            botonAlternativas.type = "button";
+            botonAlternativas.textContent = "Ver alternativas";
+            botonAlternativas.className = "btn btn-secondary";
+            botonAlternativas.disabled = inventarioBloqueado;
+            botonAlternativas.addEventListener("click", () => {
+                document.dispatchEvent(new CustomEvent("tecnotrack:consultar-alternativas", {
+                    detail: { equipoId: equipo.id }
+                }));
+            });
+            celdaAccion.appendChild(botonAlternativas);
         }
 
         // Agrega las celdas a la fila.
@@ -198,6 +244,9 @@ function mostrarEquipos(listaEquipos) {
 // 5. BÚSQUEDA Y FILTROS
 // ==========================================
 
+/** Aplica conjuntamente los criterios del formulario a la instantánea API.
+ * @returns {void}
+ */
 function filtrarEquipos() {
     const busqueda = normalizarTextoInventario(
         campoBusquedaInventario.value
@@ -215,7 +264,7 @@ function filtrarEquipos() {
         filtroEstadoInventario.value
     );
 
-    const equiposFiltrados = equipos.filter(equipo => {
+    const equiposFiltrados = equiposInventario.filter(equipo => {
         const coincideCodigo =
             normalizarTextoInventario(equipo.id).includes(busqueda);
 
@@ -248,6 +297,7 @@ function filtrarEquipos() {
 // ==========================================
 
 function limpiarFiltrosInventario() {
+    paginaInventario = 1;
     campoBusquedaInventario.value = "";
     filtroTipoInventario.value = "";
     filtroUbicacionInventario.value = "";
@@ -261,43 +311,79 @@ function limpiarFiltrosInventario() {
 // 7. INICIALIZAR EL INVENTARIO
 // ==========================================
 
+/** Registra una sola vez los eventos del inventario y pinta el estado inicial.
+ * @returns {void}
+ */
 function inicializarInventario() {
-    // Comprueba que los datos de prueba existan.
-    if (!Array.isArray(equipos)) {
+    if (inventarioInicializado) return;
+    inventarioInicializado = true;
+    // La primera instantánea puede estar vacía mientras se consulta la API.
+    if (!Array.isArray(equiposInventario)) {
         mensajeInventario.textContent =
             "No fue posible cargar el inventario.";
 
         return;
     }
 
-    // Eventos de búsqueda y filtros.
+    // Único propietario de los eventos de búsqueda, filtros y paginación.
+    const aplicarFiltros = () => {
+        paginaInventario = 1;
+        filtrarEquipos();
+    };
     campoBusquedaInventario.addEventListener(
         "input",
-        filtrarEquipos
+        aplicarFiltros
     );
 
     filtroTipoInventario.addEventListener(
         "change",
-        filtrarEquipos
+        aplicarFiltros
     );
 
     filtroUbicacionInventario.addEventListener(
         "change",
-        filtrarEquipos
+        aplicarFiltros
     );
 
     filtroEstadoInventario.addEventListener(
         "change",
-        filtrarEquipos
+        aplicarFiltros
     );
 
     document.getElementById("limpiarFiltros")
         .addEventListener("click", limpiarFiltrosInventario);
+    document.getElementById("pagina-anterior").addEventListener("click", () => {
+        paginaInventario = Math.max(1, paginaInventario - 1);
+        filtrarEquipos();
+    });
+    document.getElementById("pagina-siguiente").addEventListener("click", () => {
+        paginaInventario++;
+        filtrarEquipos();
+    });
 
     // Primera carga.
     actualizarResumenInventario();
     filtrarEquipos();
 }
+
+/** Entrega al inventario una instantánea del adaptador API, sin modificarla.
+ * @param {Array<Object>} lista Equipos validados por api.js.
+ * @returns {void}
+ */
+function actualizarDatosInventario(lista) {
+    equiposInventario = lista.slice();
+    actualizarResumenInventario();
+    filtrarEquipos();
+}
+
+window.TecnoTrackInventario = Object.freeze({
+    actualizar: actualizarDatosInventario,
+    configurarPresentacion: creadorIcono => { crearIconoTipoInventario = creadorIcono; },
+    establecerBloqueo: bloqueado => {
+        inventarioBloqueado = bloqueado;
+        cuerpoTablaInventario.querySelectorAll("button").forEach(boton => { boton.disabled = bloqueado; });
+    }
+});
 // Ejecuta la inicialización cuando el HTML está listo.
 if (document.readyState === "loading") {
     document.addEventListener(
