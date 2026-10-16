@@ -321,7 +321,181 @@ tr:hover {
     border-radius: 8px;
     border: 1px dashed var(--accent-malva);
 }
+#inventario > p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
 
+/* Panel de resumen general */
+.resumen-inventario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--bg-marfil), var(--bg-card));
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.resumen-inventario p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.resumen-inventario strong {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--text-dark);
+    margin-top: 0.2rem;
+}
+
+/* Sección de Búsqueda y Filtros */
+.filtros-inventario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) auto;
+    gap: 1rem;
+    align-items: flex-end;
+    background-color: var(--bg-marfil);
+    padding: 1.25rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+
+.filtros-inventario label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--text-dark);
+}
+
+.filtros-inventario input[type="search"],
+.filtros-inventario select {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    background-color: var(--bg-card);
+    color: var(--text-dark);
+    transition: border-color 0.2s;
+}
+
+.filtros-inventario input[type="search"]:focus,
+.filtros-inventario select:focus {
+    outline: none;
+    border-color: var(--accent-malva);
+}
+
+/* Botón de limpiar filtros */
+#limpiarFiltros {
+    background-color: var(--primary-lavanda);
+    color: var(--text-dark);
+    border: none;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    height: 41px; /* Alineación perfecta con los inputs */
+}
+
+#limpiarFiltros:hover {
+    background-color: var(--primary-lavanda-hover);
+}
+
+#limpiarFiltros:active {
+    transform: scale(0.98);
+}
+
+/* Contador de resultados y mensajes */
+#cantidadResultados {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+#mensajeSinResultados {
+    text-align: center;
+    padding: 1.5rem;
+    color: var(--text-muted);
+    font-style: italic;
+    background-color: var(--bg-marfil);
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+#mensajeInventario {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+/*
+inventario
+*/
+
+.estado-equipo {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.estado-disponible {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.estado-prestado {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+.estado-dañado {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.estado-inhabilitado,
+.estado-desconocido {
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.boton-prestar {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2563eb;
+    color: white;
+    cursor: pointer;
+}
+
+.boton-prestar:hover {
+    background-color: #1d4ed8;
+}
+
+.boton-prestar:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+}
+
+.tabla-contenedor {
+    width: 100%;
+    overflow-x: auto;
+}
+
+#mensajeSinResultados {
+    padding: 16px;
+    text-align: center;
+}
 /* --- Pie de página --- */
 .footer {
     text-align: center;
