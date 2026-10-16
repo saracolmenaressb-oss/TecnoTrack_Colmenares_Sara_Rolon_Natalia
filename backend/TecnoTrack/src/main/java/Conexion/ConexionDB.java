@@ -16,13 +16,13 @@ import java.sql.SQLException;
 public class ConexionDB {
     private static String url = "";
     private static String user = "";
-    private static String password = "";
+    private static String password = System.getenv("TECNOTRACK_DB_PASSWORD");
     public static Connection con = null;
     
     public static Connection MysConnection() throws SQLException{
-        url = "jdbc:mysql://localhost:3306/crediya_db";
+        url = "jdbc:mysql://localhost:3306/TecnoTrack";
         user = "root";
-        password = "@lixteamo10102019";  
+        password = System.getenv("TECNOTRACK_DB_PASSWORD");  
         return getConnection(url, user, password);
     }
      private static Connection getConnection(String url, String user,String password){
